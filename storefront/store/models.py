@@ -61,6 +61,7 @@ class Address(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
+    zip = models.CharField(max_length=12, null=True)
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
