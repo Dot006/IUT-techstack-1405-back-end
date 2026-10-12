@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db.models import Q
 from store.models import Product, Customer, Order, OrderItem
 
 def say_hello(request):
@@ -25,6 +26,15 @@ def say_hello(request):
     queryset16 = Order.objects.filter(customer__id=1)
     queryset17 = OrderItem.objects.filter(product__collection__id=3)
     # search queryset api for more information
+    
+    # Products: inventory < 10 AND price < 20
+    queryset18 = Product.objects.filter(inventory__lt=10, unit_price__lt=20)
+    # this is the same:
+    queryset19 = Product.objects.filter(inventory__lt=10).filter(unit_price__lt=20)
+    
+    # Products: inventory < 10 OR price < 20
+    queryset20 = Product.objects.filter(Q(inventory__lt=10) | Q(unit_price__lt=20))
+    # you can also use '~' for 'not' and '&' for 'and' instead of '|'
     
     
     
