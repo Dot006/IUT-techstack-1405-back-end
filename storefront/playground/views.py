@@ -50,7 +50,12 @@ def say_hello(request):
     queryset24 = Product.objects.all()[:5] # 0, 1, 2, 3, 4
     queryset25 = Product.objects.all()[5:10] # 5, 6, 7, 8, 9
     
+    queryset26 = Product.objects.values('id', 'title', 'collection__title') # only returns id and title field
+    # values() returns a bunch of dictionaries 
+    # .values_list() returns a bunch of tuples
     
+    queryset27 = Product.objects.filter(id__in=OrderItem.objects.values('product__id').distinct()).order_by('title')
+        
     # search queryset api for more information
     
-    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset20)})
+    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27)})
