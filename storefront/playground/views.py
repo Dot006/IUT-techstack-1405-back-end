@@ -47,6 +47,9 @@ def say_hello(request):
     product2 = Product.objects.earliest('unit_price') # orders ascending and returns the first object
     product3 = Product.objects.latest('unit_price') # orders descending and returns the first object
     
+    queryset24 = Product.objects.all()[:5] # 0, 1, 2, 3, 4
+    queryset25 = Product.objects.all()[5:10] # 5, 6, 7, 8, 9
+    
     
     # search queryset api for more information
     
