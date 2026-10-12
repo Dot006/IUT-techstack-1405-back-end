@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q, F
 from store.models import Product, Customer, Order, OrderItem
 
 def say_hello(request):
@@ -25,7 +25,6 @@ def say_hello(request):
     queryset15 = Product.objects.filter(inventory__lt=10)
     queryset16 = Order.objects.filter(customer__id=1)
     queryset17 = OrderItem.objects.filter(product__collection__id=3)
-    # search queryset api for more information
     
     # Products: inventory < 10 AND price < 20
     queryset18 = Product.objects.filter(inventory__lt=10, unit_price__lt=20)
@@ -36,6 +35,19 @@ def say_hello(request):
     queryset20 = Product.objects.filter(Q(inventory__lt=10) | Q(unit_price__lt=20))
     # you can also use '~' for 'not' and '&' for 'and' instead of '|'
     
+    # Products: invnetory = price
+    queryset21 = Product.objects.filter(inventory=F('unit_price'))
+    # 'collection__id' also works
+    
+    queryset22 = Product.objects.order_by('unit_price', '-title') 
+    # default is ascending, adding '-' will make it descending
+    queryset23 = Product.objects.order_by('unit_price', '-title').reverse()
+    # reverse() will reverse the direction of the sort
+    product1 = Product.objects.order_by('unit_price')[0] # sorts it and then returns the first object
+    product2 = Product.objects.earliest('unit_price') # orders ascending and returns the first object
+    product3 = Product.objects.latest('unit_price') # orders descending and returns the first object
     
     
-    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset15)})
+    # search queryset api for more information
+    
+    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset20)})
