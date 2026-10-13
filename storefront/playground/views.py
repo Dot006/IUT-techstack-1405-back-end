@@ -92,15 +92,8 @@ def say_hello(request):
     discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
     queryset37 = Product.objects.annotate(discounted_price=discounted_price)
     
+    queryset38 = TaggedItem.objects.get_tags_for(Product, 1)
+    
     # search queryset api for more information
-    
-    content_type = ContentType.objects.get_for_model(Product)
-    
-    queryset38 = TaggedItem.objects\
-        .select_related('tag')\
-        .filter(
-            content_type=content_type,
-            object_id=1    
-        )
     
     return render(request, 'hello.html', { 'name' : 'Mosh', 'tags': list(queryset38)})
