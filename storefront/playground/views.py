@@ -85,6 +85,8 @@ def say_hello(request):
         full_name = Concat('first_name', Value(' '), 'last_name')
     )
     
+    queryset36 = Customer.objects.annotate(orders_count=Count('order'))
+    
     # search queryset api for more information
     
     return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27), 'result': result, 'orderCount': orderCount, 'product1Sold': product1Sold, 'customer1OrderCount': customer1OrderCount, 'collection3Products': collection3Products})
