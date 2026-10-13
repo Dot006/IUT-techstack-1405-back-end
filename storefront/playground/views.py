@@ -55,7 +55,10 @@ def say_hello(request):
     # .values_list() returns a bunch of tuples
     
     queryset27 = Product.objects.filter(id__in=OrderItem.objects.values('product__id').distinct()).order_by('title')
-        
+    
+    queryset28 = Product.objects.only('id', 'title') # with this, if you access another field, it'll query for it
+    queryset29 = Product.objects.defer('description') # it'll return all the fields except 'description' field
+    
     # search queryset api for more information
     
     return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27)})
