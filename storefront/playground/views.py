@@ -59,6 +59,13 @@ def say_hello(request):
     queryset28 = Product.objects.only('id', 'title') # with this, if you access another field, it'll query for it
     queryset29 = Product.objects.defer('description') # it'll return all the fields except 'description' field
     
+    # select_related (1)
+    # prefetch_related (n)
+    queryset30 = Product.objects.prefetch_related('promotion').select_related('collection').all()
+    # normally when you use 'objects.all()' it'll only query the product table, not related tables
+    # with 'select_related' and 'prefetch_related' it'll preload related tables
+    queryset31 = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+    
     # search queryset api for more information
     
     return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27)})
