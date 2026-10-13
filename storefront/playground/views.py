@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Q, F
+from django.db.models import Q, F, Value
 from django.db.models.aggregates import Count, Max, Min, Avg, Sum
 from store.models import Product, Customer, Order, OrderItem
 
@@ -72,6 +72,10 @@ def say_hello(request):
     product1Sold = OrderItem.objects.filter(product__id=1).aggregate(product1Sold=Sum('quantity'))
     customer1OrderCount = Order.objects.filter(customer__id=1).aggregate(customer1OrderCount=Count('id'))
     collection3Products = Product.objects.filter(collection__id=3).aggregate(minPrice=Min('unit_price'), maxPrice=Max('unit_price'), avgPrice=Avg('unit_price'))
+    
+    queryset32 = Customer.objects.annotate(is_new=Value(True))
+    queryset33 = Customer.objects.annotate(new_id=F('id') + 1)
+    
     
     # search queryset api for more information
     
