@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Q, F, Value, Func
+from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Max, Min, Avg, Sum
 from store.models import Product, Customer, Order, OrderItem
@@ -86,6 +86,9 @@ def say_hello(request):
     )
     
     queryset36 = Customer.objects.annotate(orders_count=Count('order'))
+    
+    discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
+    queryset37 = Product.objects.annotate(discounted_price=discounted_price)
     
     # search queryset api for more information
     
