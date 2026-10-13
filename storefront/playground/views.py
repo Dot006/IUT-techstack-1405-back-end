@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Max, Min, Avg, Sum
+from django.contrib.contenttypes.models import ContentType
 from store.models import Product, Customer, Order, OrderItem
+from tags.models import TaggedItem
 
 def say_hello(request):
     # query_set = Product.objects.all() # it returns a query set
@@ -92,4 +94,13 @@ def say_hello(request):
     
     # search queryset api for more information
     
-    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27), 'result': result, 'orderCount': orderCount, 'product1Sold': product1Sold, 'customer1OrderCount': customer1OrderCount, 'collection3Products': collection3Products})
+    content_type = ContentType.objects.get_for_model(Product)
+    
+    queryset38 = TaggedItem.objects\
+        .select_related('tag')\
+        .filter(
+            content_type=content_type,
+            object_id=1    
+        )
+    
+    return render(request, 'hello.html', { 'name' : 'Mosh', 'tags': list(queryset38)})
