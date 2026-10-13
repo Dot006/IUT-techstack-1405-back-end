@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.db.models import Q, F, Value
+from django.db.models import Q, F, Value, Func
+from django.db.models.functions import Concat
 from django.db.models.aggregates import Count, Max, Min, Avg, Sum
 from store.models import Product, Customer, Order, OrderItem
 
@@ -76,6 +77,13 @@ def say_hello(request):
     queryset32 = Customer.objects.annotate(is_new=Value(True))
     queryset33 = Customer.objects.annotate(new_id=F('id') + 1)
     
+    queryset34 = Customer.objects.annotate(
+        full_name = Func(F('first_name'), Value(' '), F('last_name'), function='CONCAT')
+    )
+    # this is the same
+    queryset35 = Customer.objects.annotate(
+        full_name = Concat('first_name', Value(' '), 'last_name')
+    )
     
     # search queryset api for more information
     
