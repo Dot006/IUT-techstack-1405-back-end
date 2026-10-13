@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Q, F
+from django.db.models.aggregates import Count, Max, Min, Avg, Sum
 from store.models import Product, Customer, Order, OrderItem
 
 def say_hello(request):
@@ -66,6 +67,12 @@ def say_hello(request):
     # with 'select_related' and 'prefetch_related' it'll preload related tables
     queryset31 = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
     
+    result = Product.objects.filter(collection__id=1).aggregate(count=Count('id'), min_price=Min('unit_price'))
+    orderCount = Order.objects.aggregate(order_count=Count('id'))
+    product1Sold = OrderItem.objects.filter(product__id=1).aggregate(product1Sold=Sum('quantity'))
+    customer1OrderCount = Order.objects.filter(customer__id=1).aggregate(customer1OrderCount=Count('id'))
+    collection3Products = Product.objects.filter(collection__id=3).aggregate(minPrice=Min('unit_price'), maxPrice=Max('unit_price'), avgPrice=Avg('unit_price'))
+    
     # search queryset api for more information
     
-    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27)})
+    return render(request, 'hello.html', { 'name' : 'Mosh', 'products': list(queryset27), 'result': result, 'orderCount': orderCount, 'product1Sold': product1Sold, 'customer1OrderCount': customer1OrderCount, 'collection3Products': collection3Products})
